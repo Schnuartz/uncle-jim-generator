@@ -18,7 +18,7 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - run: pip install pypdf==6.19.0 pypdfium2==5.14.0 pdfplumber==0.11.10
