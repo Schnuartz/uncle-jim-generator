@@ -1,0 +1,40 @@
+# Changelog
+
+## 1.1.6 — 2026-10-10
+
+- Tightened the five-row address grid to six columns (30 default addresses) while keeping each address QR at 20.5 mm; moved verification boxes into the left cell margin.
+
+## 1.1.5 — 2026-10-10
+
+- Reflowed the default address grid to five columns across five rows (25 addresses) and split each complete address over two lines.
+
+## 1.1.4 — 2026-10-10
+
+- Increased address QR codes, placed each Bitcoin address beneath its QR, and changed the default sheet to four columns across five rows (20 addresses).
+
+## 1.1.3 — 2026-10-09
+
+- Replaced the technical wallet-policy label in PDFs with a human-readable address format and signature type, including a clear M-of-N threshold when one multisig policy is present.
+
+## 1.1.2 — 2026-10-08
+
+- Reflowed the 24-address sheet to four QR codes per row across six rows while keeping each address, index and verification checkbox with its QR.
+
+## 1.1.1 — 2026-10-08
+
+- Added the ClavaStack Security identity to the generator header and clarified its watch-only PDF output in English and German.
+- Keep offline cache and PDF creator metadata aligned with the package version.
+
+## 1.1.0 — 2026-10-08
+
+- Redesigned the printable sheet with a short brand underline, a large checksummed receive-descriptor QR labelled Watch-Only, and a compact three-column/eight-row address grid.
+- Kept the complete original and effective descriptors as selectable text on the recovery pages; verifies the rendered descriptor QR alongside every address QR.
+
+## 1.0.0 — 2026-10-08
+
+- Public-only XPub/descriptor import, local BIP32 derivation, single-sig and multisig, compatible WSH Miniscript/Taproot trees, SLIP-132 and test networks.
+- German/English React UI with address preview, advanced derivation settings, strict validation and worker limits.
+- A4 printable address grids, exact 170 × 200 mm trimming outline, empty verification boxes, recovery details and detachable localized instructions/product QRs.
+- Embedded OFL fonts, local vector QR rendering, application-scoped offline precaching and no wallet persistence.
+- Independent BIP/scure reference tests, PDF rendering/QR verification, offline browser tests, CI, contribution/security documentation.
+- Static ClavaStack integration contract with privacy isolation and short URL aliases.
