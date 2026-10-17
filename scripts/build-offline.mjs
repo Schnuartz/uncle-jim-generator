@@ -7,10 +7,18 @@ async function walk(dir,prefix=''){for(const entry of await readdir(dir,{withFil
 await walk(root);
 const html=await readFile(new URL('index.html',root),'utf8');
 await mkdir(new URL('de/',root),{recursive:true});
-await writeFile(new URL('de/index.html',root),html.replace('<html lang="en">','<html lang="de">').replace('<title>Uncle Jim PDF Generator | ClavaStack</title>','<title>Uncle Jim PDF-Generator | ClavaStack</title>'));
+// Localize only document metadata; application DOM and runtime assets stay unchanged.
+const germanHtml=html
+  .replace('<html lang="en">','<html lang="de">')
+  .replaceAll('Create a printable Bitcoin address sheet privately in your browser, with offline support.','Erstelle ein druckbares Bitcoin-Adressenblatt privat in deinem Browser, mit Offline-Unterstützung.')
+  .replaceAll('Uncle Jim PDF Generator | ClavaStack','Uncle Jim PDF-Generator | ClavaStack')
+  .replace('rel="canonical" href="https://clavastack.com/uncle-jim-generator"','rel="canonical" href="https://clavastack.com/de/uncle-jim-generator"')
+  .replace('property="og:url" content="https://clavastack.com/uncle-jim-generator"','property="og:url" content="https://clavastack.com/de/uncle-jim-generator"')
+  .replace('property="og:locale" content="en_US"','property="og:locale" content="de_DE"');
+await writeFile(new URL('de/index.html',root),germanHtml);
 const assets=files.filter(f=>f!=='index.html').map(f=>'/uncle-jim-generator/'+f);
 const manifest=['/uncle-jim-generator/','/uncle-jim-generator','/de/uncle-jim-generator/','/de/uncle-jim-generator',...assets];
-const buildId=createHash('sha256').update(html+manifest.join('|')).digest('hex').slice(0,16);
+const buildId=createHash('sha256').update(html+germanHtml+manifest.join('|')).digest('hex').slice(0,16);
 const sw=`/* Application assets only. Never stores user input. */
 const CACHE='uncle-jim-${version}-${buildId}';
 const ASSETS=${JSON.stringify(manifest)};
