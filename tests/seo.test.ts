@@ -7,7 +7,7 @@ describe.skipIf(!existsSync('dist/index.html'))('built document SEO and offline 
   let en: string;
   let de: string;
   beforeAll(() => { en = readFileSync('dist/index.html', 'utf8'); de = readFileSync('dist/de/index.html', 'utf8'); });
-  it('keeps both documents reciprocal and changes only head metadata', () => {
+  it('prerenders existing localized UI and keeps document metadata reciprocal', () => {
     for (const [locale, html, path] of [['en', en, '/uncle-jim-generator'], ['de', de, '/de/uncle-jim-generator']]) {
       expect(html).toContain(`<html lang="${locale}">`);
       expect(html).toContain(`rel="canonical" href="https://clavastack.com${path}"`);
@@ -19,7 +19,12 @@ describe.skipIf(!existsSync('dist/index.html'))('built document SEO and offline 
       expect(html).toContain('property="og:image:height" content="2500"');
     }
     expect(de).toContain('Erstelle ein druckbares Bitcoin-Adressenblatt');
-    expect(en.split('<body>')[1]).toBe(de.split('<body>')[1]);
+    expect(en.match(/<h1>/g)).toHaveLength(1);
+    expect(de.match(/<h1>/g)).toHaveLength(1);
+    expect(en).toContain('<h1>Uncle Jim PDF Generator</h1>');
+    expect(de).toContain('<h1>Uncle Jim PDF-Generator</h1>');
+    expect(en).toContain('id="wallet-input"');
+    expect(de).toContain('id="wallet-input"');
   });
   it('includes both localized documents in the service-worker build identity', () => {
     const worker = readFileSync('dist/sw.js', 'utf8');

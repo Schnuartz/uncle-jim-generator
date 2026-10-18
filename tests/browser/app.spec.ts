@@ -43,3 +43,19 @@ test('mobile form has no horizontal overflow and German links are localized',asy
   await expect(page.getByRole('link',{name:'Zu den anderen Tools'})).toHaveAttribute('href','/de/tools');
   await page.screenshot({path:'output/ui-mobile-de.png',fullPage:true});
 });
+
+
+test('initial documents expose existing localized UI without JavaScript and hydrate without recovery errors',async({browser})=>{
+  for(const [locale,title] of [['en','Uncle Jim PDF Generator'],['de','Uncle Jim PDF-Generator']]) {
+    const path=locale==='de'?'/de/uncle-jim-generator':'/uncle-jim-generator';
+    const context=await browser.newContext({javaScriptEnabled:false});
+    const page=await context.newPage();await page.goto('http://127.0.0.1:4173'+path);
+    await expect(page.getByRole('heading',{level:1,name:title,exact:true})).toBeVisible();
+    await expect(page.locator('#wallet-input')).toBeEmpty();
+    await context.close();
+    const hydrated=await browser.newContext();const live=await hydrated.newPage();const errors:string[]=[];
+    live.on('console',message=>{if(/hydrat|server rendered/i.test(message.text())&&message.type()==='error')errors.push(message.text());});
+    await live.goto('http://127.0.0.1:4173'+path);await expect(live.getByRole('heading',{level:1,name:title,exact:true})).toBeVisible();
+    expect(errors).toEqual([]);await hydrated.close();
+  }
+});

@@ -1,12 +1,12 @@
 {
   "name": "@clavastack/uncle-jim-generator",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "private": true,
   "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build && node scripts/build-offline.mjs",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node scripts/build-offline.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -16,7 +16,8 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:browser",
     "postinstall": "node scripts/prepare-fonts.mjs",
     "pdf:verify": "python scripts/verify-pdfs.py && tsx scripts/verify-qr.ts",
-    "prebuild": "node scripts/prepare-fonts.mjs && node scripts/prepare-notices.mjs"
+    "prebuild": "node scripts/prepare-fonts.mjs && node scripts/prepare-notices.mjs",
+    "test:built": "vitest run tests/seo.test.ts"
   },
   "dependencies": {
     "@bitcoinerlab/descriptors": "3.2.0",

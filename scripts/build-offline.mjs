@@ -5,10 +5,13 @@ const version=JSON.parse(await readFile(new URL('../package.json',import.meta.ur
 const files=[];
 async function walk(dir,prefix=''){for(const entry of await readdir(dir,{withFileTypes:true})){if(entry.isDirectory())await walk(new URL(`${entry.name}/`,dir),prefix+entry.name+'/');else files.push(prefix+entry.name);}}
 await walk(root);
-const html=await readFile(new URL('index.html',root),'utf8');
+const { render } = await import('../.prerender/prerender.js');
+const template=await readFile(new URL('index.html',root),'utf8');
+const html=template.replace('<div id="root"></div>', `<div id="root">${render('en')}</div>`);
+await writeFile(new URL('index.html',root),html);
 await mkdir(new URL('de/',root),{recursive:true});
 // Localize only document metadata; application DOM and runtime assets stay unchanged.
-const germanHtml=html
+const germanHtml=template.replace('<div id="root"></div>', `<div id="root">${render('de')}</div>`)
   .replace('<html lang="en">','<html lang="de">')
   .replaceAll('Create a printable Bitcoin address sheet privately in your browser, with offline support.','Erstelle ein druckbares Bitcoin-Adressenblatt privat in deinem Browser, mit Offline-Unterstützung.')
   .replaceAll('Uncle Jim PDF Generator | ClavaStack','Uncle Jim PDF-Generator | ClavaStack')

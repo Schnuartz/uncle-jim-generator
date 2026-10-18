@@ -16,6 +16,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run test:built
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - uses: actions/setup-python@v5
