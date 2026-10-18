@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { deriveWallet } from '../bitcoin/client';
-import { preflight, WalletError, type WalletModel, type ScriptType, type NetworkFamily } from '../bitcoin/engine';
-import { generatePdf, safeFilename } from '../pdf/generator';
+import { preflight, WalletError } from '../bitcoin/preflight';
+import type { WalletModel, ScriptType, NetworkFamily } from '../bitcoin/engine';
 import { errorMessages, messages, type Language } from '../i18n/messages';
-import logo from '../../public/clavastack-logo.png';
+const logo = '/uncle-jim-generator/clavastack-logo.png';
 
-export function App() {
-  const [language,setLanguage]=useState<Language>(location.pathname.startsWith('/de/')?'de':'en');
+export function App({ initialLanguage }: { initialLanguage?: Language }) {
+  const [language,setLanguage]=useState<Language>(initialLanguage ?? (typeof location !== 'undefined' && location.pathname.startsWith('/de/') ? 'de' : 'en'));
   const t=messages[language],prefix=language==='de'?'/de':'';
   const [input,setInput]=useState(''),[name,setName]=useState(''),[description,setDescription]=useState('');
   const [script,setScript]=useState<ScriptType|''>(''),[network,setNetwork]=useState<NetworkFamily|''>('');
@@ -44,7 +44,7 @@ export function App() {
     try {
       const derived=await deriveWallet(input,{...(script?{scriptType:script}:{}),...(network?{network}:{}),...(path?{remainingPath:path}:{}),start,count,...(change?{changeDescriptor:change}:{})});
       setWallet(derived);
-      if(download){const pdf=generatePdf(derived,name,description,language);pdf.save(safeFilename(name));setSuccess(true);}
+      if(download){const { generatePdf, safeFilename } = await import('../pdf/generator');const pdf=generatePdf(derived,name,description,language);pdf.save(safeFilename(name));setSuccess(true);}
     }catch(e){const code=e instanceof WalletError?e.code:'descriptor';setError(errorMessages[language][code]);if(code==='networkRequired')setAdvanced(true);}
     finally{setBusy(false);}
   }

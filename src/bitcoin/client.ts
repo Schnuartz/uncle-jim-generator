@@ -1,4 +1,5 @@
-import { preflight, WalletError, type WalletOptions, type WalletModel } from './engine';
+import { preflight, WalletError } from './preflight';
+import type { WalletOptions, WalletModel } from './engine';
 export function deriveWallet(input:string,options:WalletOptions):Promise<WalletModel> {
   preflight(input);
   return new Promise((resolve,reject)=>{

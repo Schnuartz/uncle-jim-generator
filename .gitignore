@@ -10,3 +10,5 @@ integration-handoff.md
 generator-ready.json
 *.log
 src/pdf/font-data.json
+
+.prerender/
